@@ -145,7 +145,7 @@ if st.session_state.admin_mode:
            # st.write("Odtworzono!")
         # except Exception as e:
            # st.error(f"Błąd audio: {e} – sprawdź plik/URL")
-        st.session_state.buzzers = {}  # Reset
+    st.session_state.buzzers = {}  # Reset
     
     # Zarządzaj buzzerami i punktami
     st.subheader("Buzzery i punkty")
