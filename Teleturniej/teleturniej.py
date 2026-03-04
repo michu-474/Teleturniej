@@ -20,10 +20,10 @@
 
 import streamlit as st
 import time
-import pygame  # Do odtwarzania audio – zainstaluj pip install pygame
+# import pygame  # Do odtwarzania audio – zainstaluj pip install pygame
 
 # Inicjalizacja pygame do audio
-pygame.mixer.init()
+# pygame.mixer.init()
 
 # Dane do edycji – tu edytuj swoje pytania i odpowiedzi
 questions = [
@@ -33,9 +33,9 @@ questions = [
 ]
 
 melodies = [
-    {"name": "Piosenka 1", "file": "path/to/audio1.mp3", "duration": 10},  # 'file' to ścieżka do MP3 lub URL
-    {"name": "Piosenka 2", "file": "path/to/audio2.mp3", "duration": 15},
-    # Dodaj: upload pliki do folderu z app.py lub użyj URL jak "https://example.com/audio.mp3"
+    {"name": "Piosenka 1", "file": "piosenka1.mp3", "duration": 10},
+    {"name": "Piosenka 2", "file": "piosenka2.mp3", "duration": 15},
+    # dodaj więcej
 ]
 
 # Stan aplikacji (session state)
@@ -118,15 +118,25 @@ if st.session_state.admin_mode:
     st.subheader("Uruchom 'Jaka to melodia'")
     selected_m = st.selectbox("Wybierz melodię", [m["name"] for m in melodies])
     if st.button("Odtwórz fragment"):
-        st.session_state.current_melody = next(m for m in melodies if m["name"] == selected_m)
-        try:
-            pygame.mixer.music.load(st.session_state.current_melody["file"])
-            pygame.mixer.music.play()
-            time.sleep(st.session_state.current_melody["duration"])
-            pygame.mixer.music.stop()
-            st.write("Odtworzono!")
-        except Exception as e:
-            st.error(f"Błąd audio: {e} – sprawdź plik/URL")
+    st.session_state.current_melody = next(m for m in melodies if m["name"] == selected_m)
+    
+    audio_file = st.session_state.current_melody["file"]  # np. "piosenka1.mp3"
+    
+    # Pokazujemy player z autoplay – gra u wszystkich w przeglądarce
+    st.audio(audio_file, format="audio/mp3", autoplay=True)
+    
+    st.write(f"Odtwarzam: {st.session_state.current_melody['name']} ({st.session_state.current_melody['duration']} sekund)")
+    
+    # Opcjonalnie: info o limicie przeglądarki (Chrome/Firefox blokuje autoplay bez kliknięcia)
+    st.info("Jeśli audio nie startuje automatycznie – kliknij gdzieś na stronie i spróbuj ponownie (polityka przeglądarki).")
+        #try:
+           # pygame.mixer.music.load(st.session_state.current_melody["file"])
+           # pygame.mixer.music.play()
+           # time.sleep(st.session_state.current_melody["duration"])
+           # pygame.mixer.music.stop()
+           # st.write("Odtworzono!")
+        # except Exception as e:
+           # st.error(f"Błąd audio: {e} – sprawdź plik/URL")
         st.session_state.buzzers = {}  # Reset
     
     # Zarządzaj buzzerami i punktami
