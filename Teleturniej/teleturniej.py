@@ -118,7 +118,15 @@ if st.session_state.admin_mode:
     st.subheader("Uruchom 'Jaka to melodia'")
     selected_m = st.selectbox("Wybierz melodię", [m["name"] for m in melodies])
     if st.button("Odtwórz fragment"):
-    st.session_state.current_melody = next(m for m in melodies if m["name"] == selected_m)
+        st.session_state.current_melody = next(m for m in melodies if m["name"] == selected_m)
+    
+    audio_file = st.session_state.current_melody["file"]
+    
+    st.audio(audio_file, format="audio/mp3", autoplay=True)
+    
+    st.write(f"Odtwarzam: {st.session_state.current_melody['name']} ({st.session_state.current_melody['duration']} sekund)")
+    
+    st.info("Jeśli audio nie startuje automatycznie – kliknij gdzieś na stronie i spróbuj ponownie.")
     
     audio_file = st.session_state.current_melody["file"]  # np. "piosenka1.mp3"
     
