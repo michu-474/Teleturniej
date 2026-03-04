@@ -67,6 +67,11 @@ player_name = st.text_input("Twoje imię (gracz lub host)")
 # Panel gracza – zawsze widoczny
 if player_name:
     st.header(f"Witaj, {player_name}!")
+
+    # Gracz pobiera pytanie z URL, jeśli jest
+q_from_url = st.query_params.get("q", [None])[0]
+if q_from_url:
+    st.session_state.current_question = next((q for q in questions if q["question"] == q_from_url), None)
     
     # Buzz button
     if st.button("BUZZ! (Kliknij jako pierwszy)"):
@@ -111,8 +116,9 @@ if st.session_state.admin_mode:
     selected_q = st.selectbox("Wybierz pytanie", [q["question"] for q in questions])
     if st.button("Pokaz pytanie"):
         st.session_state.current_question = next(q for q in questions if q["question"] == selected_q)
-        st.session_state.buzzers = {}  # Reset buzzers
-        st.write("Pytanie pokazane!")
+    st.session_state.buzzers = {}
+    st.query_params["q"] = selected_q  # zapisujemy pytanie do URL
+    st.success("Pytanie pokazane! Gracze powinni zobaczyć po odświeżeniu.")
     
     # Uruchom melodię
     st.subheader("Uruchom 'Jaka to melodia'")
